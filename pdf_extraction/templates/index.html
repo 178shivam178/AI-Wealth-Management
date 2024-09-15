@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Wealth Management Demo</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .upload-section h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-section input[type="file"] {
+            padding: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .upload-section button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #ffffff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .upload-section button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            color: #666;
+        }
+
+        /* Spinner styles */
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #007BFF;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Show spinner while processing */
+        .loading .spinner {
+            display: block;
+        }
+
+        .loading .upload-section {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>AI Wealth Management Demo</h1>
+            <p>Experience the future of wealth management with AI-driven insights and automated processing. Upload your financial documents to see how our technology can extract valuable information and provide actionable insights.</p>
+        </header>
+
+        <div class="upload-section">
+            <h2>Upload Your Financial Document</h2>
+            <form id="uploadForm" action="/upload-and-process" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".pdf" required>
+                <button type="submit">Upload and Process PDF</button>
+            </form>
+        </div>
+
+        <!-- Spinner element -->
+        <div class="spinner" id="spinner"></div>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2024 Immortal. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // JavaScript to handle form submission and show spinner
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            document.body.classList.add('loading'); // Show the spinner
+
+            // Create a FormData object to handle the file
+            var formData = new FormData(this);
+
+            fetch('/upload-and-process', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    window.location.href = "http://127.0.0.1:8000"; // Redirect after successful processing
+                } else {
+                    alert('Error: ' + data.error);
+                    document.body.classList.remove('loading'); // Hide the spinner on error
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred during the process. Please try again.');
+                document.body.classList.remove('loading'); // Hide the spinner on error
+            });
+        });
+    </script>
+</body>
+</html>

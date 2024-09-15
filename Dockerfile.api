@@ -1,0 +1,14 @@
+FROM python:3.8.19-slim
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /app
+
+COPY . /app/
+
+RUN pip install --upgrade pip \
+    && pip install -r requirements_api.txt
+
+EXPOSE 3002
+
+CMD ["python", "pdf_extraction/api.py"]

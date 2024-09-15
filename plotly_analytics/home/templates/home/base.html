@@ -1,0 +1,270 @@
+{% load static %}
+{% load plotly_dash %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AI Wealth Management Demo</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link href="{% static 'css/custom-styles.css' %}" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .search-bar {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-bar input[type="text"] {
+            width: 250px;
+            margin-right: 10px;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+        }
+
+        .search-bar button {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+        }
+
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .scroll-to-top:hover {
+            background-color: #0056b3;
+        }
+
+        .container-fluid {
+            padding-top: 20px;
+        }
+
+        .search-results {
+            margin-bottom: 20px;
+        }
+
+        /* New styling for the investment data sections */
+        .investment-section {
+            margin-bottom: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .investment-section h4 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+    </style>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    {% plotly_header %}
+</head>
+
+<body id="page-top">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">AI Wealth Management Demo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="search-bar">
+            <form id="search-form" class="form-inline">
+                <input type="text" id="search-query" name="query" class="form-control" placeholder="Ask a question..." required>
+                <button type="submit" class="btn">Search</button>
+            </form>
+        </div>
+        <div class="container-fluid search-results" id="search-results-container"></div>
+
+        <div class="container-fluid" id="graphs-container">
+            {% plotly_direct name='HomePage' %}
+        </div>
+
+        <div class="container-fluid">
+            <div class="greeting-section mb-4" style="color: #000; font-weight: bold;">
+                <h5>{{ person_name }} for your Account No: {{ account_no }}</h5>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Month-Year</th>
+                        <th>Average Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in data %}
+                    <tr>
+                        <td>{{ record.Month }}-{{ record.Year }}</td>
+                        <td>{{ record.AverageBalance }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h4 style="font-weight: bold;">Average Balance that you can save per month for Mutual Fund: {{average_balance}}</h4>
+        </div>
+        <div class="container-fluid">
+            {% for period, records in mutual_funds.items %}
+                <div class="investment-section">
+                    <h4>Based on your Average Balance for each the months Mutual Fund Suggestions based on Average Balance {{average_balance}} for : {{ period }}</h4>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Fund Name</th>
+                                <th>Return Percentage</th>
+                                <th>Total Invested Amount</th>
+                                <th>Future Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                            <tr>
+                                <td>{{ record.fund_name }}</td>
+                                <td>{{ record.return_percentage }}</td>
+                                <td>{{ record.total_invested_amount }}</td>
+                                <td>{{ record.future_value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    {% plotly_footer %}
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            var query = document.getElementById('search-query').value;
+
+            fetch('{% url "search_view" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}' 
+                },
+                body: new URLSearchParams({
+                    'query': query
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('search-query').value = '';
+
+                if (data.results) {
+                    updateSearchResults(query, data.results);
+                } else {
+                    console.error('Error:', data.error);
+                }
+            })
+            .catch(error => console.error('Fetch Error:', error));
+        });
+
+    function updateSearchResults(query, results) {
+    var searchResultsContainer = document.getElementById('search-results-container');
+    searchResultsContainer.innerHTML = ''; 
+
+    var questionDiv = document.createElement('div');
+    questionDiv.className = 'card mb-3';
+    questionDiv.innerHTML = `
+        <div class="card-body">
+            <h5 class="card-title">Question</h5>
+            <p class="card-text">${query}</p>
+        </div>
+    `;
+    searchResultsContainer.appendChild(questionDiv);
+
+    if (Array.isArray(results)) {
+        results.forEach(result => {
+            var resultDiv = document.createElement('div');
+            resultDiv.className = 'card mb-3';
+
+            resultDiv.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">Response</h5>
+                    <p class="card-text">${result[0]}</p>
+                </div>
+            `;
+            searchResultsContainer.appendChild(resultDiv);
+        });
+    } else if (typeof results === 'object' && results !== null) {
+        var resultDiv = document.createElement('div');
+        resultDiv.className = 'card mb-3';
+
+        var resultsHtml = '<div class="card-body"><h5 class="card-title">Response</h5>';
+
+        function renderObject(obj, level = 0) {
+            var indent = '&nbsp;'.repeat(level * 4);
+            var html = '';
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    var value = obj[key];
+                    if (typeof value === 'object' && !Array.isArray(value)) {
+                        html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong></div>`;
+                        html += renderObject(value, level + 1);
+                    } else {
+                        if (typeof value === 'number') {
+                            value = value.toFixed(2);
+                        }
+                        html += `<div style="margin-left: ${indent}px;"><strong>${key}:</strong> ${value}</div>`;
+                    }
+                }
+            }
+            return html;
+        }
+
+        resultsHtml += renderObject(results);
+        resultsHtml += '</div>';
+
+        resultDiv.innerHTML = resultsHtml;
+        searchResultsContainer.appendChild(resultDiv);
+    } else {
+        console.error('Unexpected result format:', results);
+    }
+}
+</script>
+</body>
+
+</html>

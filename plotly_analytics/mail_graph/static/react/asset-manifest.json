@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/static/react/static/css/main.106c0463.css",
+    "main.js": "/static/react/static/js/main.c6080011.js",
+    "static/js/787.b8b77e89.chunk.js": "/static/react/static/js/787.b8b77e89.chunk.js",
+    "static/media/revicons.eot": "/static/react/static/media/revicons.a77de540a38981833f9e.eot",
+    "static/media/revicons.ttf": "/static/react/static/media/revicons.57fd05d4ae650374c8de.ttf",
+    "static/media/revicons.woff": "/static/react/static/media/revicons.e8746a624ed098489406.woff",
+    "static/media/logo.svg": "/static/react/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "../../../home/templates/home/patient_journey_2.html": "/static/react/../../../home/templates/home/patient_journey_2.html",
+    "main.106c0463.css.map": "/static/react/static/css/main.106c0463.css.map",
+    "main.c6080011.js.map": "/static/react/static/js/main.c6080011.js.map",
+    "787.b8b77e89.chunk.js.map": "/static/react/static/js/787.b8b77e89.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.106c0463.css",
+    "static/js/main.c6080011.js"
+  ]
+}

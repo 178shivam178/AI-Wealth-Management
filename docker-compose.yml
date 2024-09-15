@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  manage:
+    build:
+      context: .
+      dockerfile: Dockerfile.manage
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "3002:3002"
+    volumes:
+      - .:/app
