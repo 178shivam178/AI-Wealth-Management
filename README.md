@@ -97,3 +97,5 @@ This project is designed to process and manage PDFs by setting up a Python envir
 ## Contact
 
 For any questions or support, please contact us.
+Email : shivamcse17818@gmail.com
+Phone : +91 7007320632
