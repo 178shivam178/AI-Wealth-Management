@@ -80,10 +80,7 @@ This project is designed to process and manage PDFs by setting up a Python envir
 
     Navigate to [http://localhost:3002](http://localhost:3002) in your web browser to process PDFs.
 
-<video width="640" height="360" controls>
-  <source src="https://raw.githubusercontent.com/178shivam178/AI-Wealth-Management/main/AI-wealth-management.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[Download AI Wealth Management Video](https://github.com/178shivam178/AI-Wealth-Management/raw/main/AI-wealth-management.mp4)
 
 
 ## Notes
